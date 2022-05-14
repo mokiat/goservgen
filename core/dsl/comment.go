@@ -1,15 +1,21 @@
 package dsl
 
 import (
+	"fmt"
+
 	"github.com/mokiat/goservgen/core/exec"
-	"github.com/mokiat/goservgen/core/model"
 )
 
-func Comment(content string) {
+// Comment attaches a comment to the owning entity.
+func Comment(comment string) {
 	exec.Schedule(func(c *exec.Context) error {
-		c.Owner.AttachMetadata(&model.Comment{
-			Content: content,
+		commentable, ok := c.Owner.(interface {
+			SetComment(string)
 		})
+		if !ok {
+			return fmt.Errorf("cannot attach Comment to entity")
+		}
+		commentable.SetComment(comment)
 		return nil
 	})
 }

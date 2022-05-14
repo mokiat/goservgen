@@ -1,7 +1,9 @@
 package dsl
 
-func Package(dir, namespace string) *PackageDef {
+import "fmt"
 
+func Package(dir, namespace string, fn func()) *PackageDef {
+	fmt.Println("Package...")
 	return &PackageDef{} // TODO
 }
 

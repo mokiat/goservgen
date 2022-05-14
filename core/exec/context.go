@@ -1,5 +1,5 @@
 package exec
 
 type Context struct {
-	Owner *Node
+	Owner Node
 }

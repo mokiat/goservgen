@@ -5,6 +5,8 @@ var (
 )
 
 func Schedule(fn Processor) {
+	// TODO: Preserve caller source code line location so that in case of
+	// error we can wrap it with that metadata.
 	// ctx := currentContext // TODO
 	queue = append(queue, func() error {
 		return fn(nil) // TODO: ctx

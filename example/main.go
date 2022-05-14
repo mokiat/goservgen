@@ -1,3 +1,5 @@
+//go:build tools
+
 package main
 
 import (
@@ -6,9 +8,25 @@ import (
 	"github.com/mokiat/goservgen/grpc/grpcdsl"
 )
 
+// NOTE: the `tools` build constraint aims to reduce package overhead on
+// external projects that depend on this one.
+//
+// In order to generate this file, you need to make sure to pass the `tools` tag
+// to the `go generate` command, as follows:
+//
+//     go generate -tags tools ./...
+//
+// Otherwise this file will be skipped. Having this behavior can be a useful
+// in some situations.
+
+//go:generate go run -tags tools ./
+
 func main() {
 	goservgen.Run(
-	// TODO: specify model serializer
+	// TODO: specify core model serializer
+	// TODO: specify core model validator
+	//       - It can be used to check for duplicate type names
+	//       - Or it can warn if comments don't follow the Go naming convention
 	// TODO: specify http model serializer? (or just use anonymous?)
 	// TODO: specify http client serializer
 	// TODO: specify http server serializer
@@ -16,9 +34,48 @@ func main() {
 	)
 }
 
-var Pkg = dsl.Package("../gen", "github.com/mokiat/goservgen/gen")
+var pkg = dsl.Package("../gen", "github.com/mokiat/goservgen/gen", func() {
+	dsl.Comment(`
+		Package gen holds the API resources for our project.
+	`)
+})
 
-var Person = dsl.Type(Pkg, "Person", dsl.Struct, func() {
+var _ = dsl.Service(pkg, "Users", func() {
+	dsl.Comment(`
+		Users represents a service that can manage users within
+		our microservice.
+	`)
+
+	dsl.Method("Create", func() {
+		dsl.Comment(`
+			Create stores a new user.
+		`)
+
+	})
+
+	dsl.Method("Get", func() {
+		dsl.Comment(`
+			Get retrieves a user by their ID.
+		`)
+
+	})
+
+	dsl.Method("Delete", func() {
+		dsl.Comment(`
+			Delete removes the user with the specified ID.
+		`)
+
+	})
+
+	dsl.Method("List", func() {
+		dsl.Comment(`
+			List returns a list of all users managed by this service.
+		`)
+
+	})
+})
+
+var typePerson = dsl.Type(pkg, "Person", dsl.Struct, func() {
 	dsl.Comment(`
 		Person represents a human individual with all the
 		relevant data for them.
